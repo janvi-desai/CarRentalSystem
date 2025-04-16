@@ -45,7 +45,14 @@ namespace CarRentalSystem.Services
             var car = await _repo.GetByIdAsync(model.Id);
             if (car == null) throw new Exception("Car not found.");
 
-            car = _mapper.Map<Car>(model);
+            car.Transmission = model.Transmission;
+            car.PricePerDay = model.PricePerDay;
+            car.Year = model.Year;
+            car.Brand = model.Brand;
+            car.Description = model.Description;
+            car.FuelType = model.FuelType;
+            car.ImageUrl = model.ImageUrl;
+            car.IsAvailable = model.IsAvailable;
             await _repo.UpdateAsync(car);
         }
 

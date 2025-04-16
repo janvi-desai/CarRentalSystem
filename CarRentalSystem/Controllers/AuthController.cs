@@ -29,17 +29,43 @@ namespace CarRentalSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
+            // Validate model state
             if (!ModelState.IsValid)
                 return View(model);
 
-            var result = await _authService.RegisterAsync(model.Email, model.Password, model.Role);
+            try
+            {
+                // Ensure the role is valid (optional validation)
+                if (string.IsNullOrWhiteSpace(model.Role))
+                {
+                    ModelState.AddModelError("", "Role is required.");
+                    return View(model);
+                }
 
-            if (result.Succeeded)
-                return RedirectToAction("Login", "Auth");
+                // Register the user using the AuthService
+                var result = await _authService.RegisterAsync(model.Email, model.Password, model.Role);
 
-            foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+                if (result.Succeeded)
+                {
+                    // Redirect to Login on success
+                    return RedirectToAction("Login", "Auth");
+                }
 
+                // Handle errors from RegisterAsync
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log unexpected errors (use a proper logging framework in production)
+                Console.WriteLine($"Error during registration: {ex.Message}");
+
+                ModelState.AddModelError("", "An unexpected error occurred. Please try again later.");
+            }
+
+            // Return the view with validation errors
             return View(model);
         }
 
@@ -61,8 +87,11 @@ namespace CarRentalSystem.Controllers
 
             if (result.Succeeded)
             {
+                // Store user email and roles in session
+                HttpContext.Session.SetString("UserEmail", model.Email);
                 var user = await _authService.GetUserByEmailAsync(model.Email);
                 var roles = await _authService.GetUserRolesAsync(user);
+                HttpContext.Session.SetString("UserRoles", string.Join(",", roles)); // Store roles as a comma-separated string
 
                 if (roles.Contains("Admin"))
                     return RedirectToAction("AdminIndex", "Car");
@@ -73,8 +102,8 @@ namespace CarRentalSystem.Controllers
             ModelState.AddModelError("", "Invalid login attempt");
             return View(model);
         }
-         
-        [HttpPost]
+
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

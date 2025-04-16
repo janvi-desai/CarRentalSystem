@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+﻿@inject IHttpContextAccessor HttpContextAccessor
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,18 +14,24 @@
         <div class="bg-dark border-end text-white" id="sidebar-wrapper">
             <div class="sidebar-heading p-3 fs-4 fw-bold">CarRental</div>
             <div class="list-group list-group-flush">
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-controller="Car" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">Manage Cars</a>
-                    <a asp-controller="Rental" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">All Rentals</a>
-                    <a asp-controller="Payment" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">Payments</a>
-                    <a asp-controller="SystemSetting" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">System Settings</a>
-                }
-                else if (User.IsInRole("User"))
-                {
-                    <a asp-controller="Car" asp-action="AvailableCars" class="list-group-item list-group-item-action bg-dark text-white">Available Cars</a>
-                    <a asp-controller="Rental" asp-action="MyRentals" class="list-group-item list-group-item-action bg-dark text-white">My Rentals</a>
-                    <a asp-controller="Payment" asp-action="MyPayments" class="list-group-item list-group-item-action bg-dark text-white">My Payments</a>
+                @{
+                    // Retrieve roles from session
+                    var rolesString = HttpContextAccessor.HttpContext.Session.GetString("UserRoles");
+                    var roles = rolesString?.Split(',');
+
+                    if (roles != null && roles.Contains("Admin"))
+                    {
+                        <a asp-controller="Car" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">Manage Cars</a>
+                        <a asp-controller="Rental" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">All Rentals</a>
+                        <a asp-controller="Payment" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">Payments</a>
+                        <a asp-controller="SystemSetting" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">System Settings</a>
+                    }
+                    else if (roles != null && roles.Contains("User"))
+                    {
+                        <a asp-controller="Car" asp-action="AvailableCars" class="list-group-item list-group-item-action bg-dark text-white">Available Cars</a>
+                        <a asp-controller="Rental" asp-action="MyRentals" class="list-group-item list-group-item-action bg-dark text-white">My Rentals</a>
+                        <a asp-controller="Payment" asp-action="MyPayments" class="list-group-item list-group-item-action bg-dark text-white">My Payments</a>
+                    }
                 }
 
                 <a asp-controller="Dashboard" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white">Dashboard</a>

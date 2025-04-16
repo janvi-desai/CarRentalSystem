@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+});
 
 // Register Repositories
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
@@ -63,8 +69,17 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = issuer,
         ValidAudience = audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        RoleClaimType = ClaimTypes.Role
     };
+});
+
+builder.Services.AddDistributedMemoryCache(); // Adds memory cache for storing session data
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout duration
+    options.Cookie.HttpOnly = true; // Ensure cookies are accessible only via HTTP
+    options.Cookie.IsEssential = true; // Mark cookies as essential for the application
 });
 
 // CORS Configuration (if needed)
@@ -79,6 +94,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Add `UseSession` in the pipeline
+app.UseSession();
 
 // SEED ROLES & USERS (your SeedData initialization as shown earlier)
 using (var scope = app.Services.CreateScope())

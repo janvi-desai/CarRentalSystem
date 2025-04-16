@@ -4,7 +4,7 @@ using CarRentalSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "Admin")]
+
 public class SystemSettingController : Controller
 {
     private readonly ISystemSettingService _service;
@@ -16,12 +16,26 @@ public class SystemSettingController : Controller
 
     public async Task<IActionResult> Index()
     {
+        var rolesString = HttpContext.Session.GetString("UserRoles");
+        var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+        if (roles == null || !roles.Contains("Admin"))
+        {
+            return Unauthorized("Access Denied: Admin role required.");
+        }
         var settings = await _service.GetAllAsync();
         return View(settings);
     }
 
     public async Task<IActionResult> Edit(string key)
     {
+        var rolesString = HttpContext.Session.GetString("UserRoles");
+        var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+        if (roles == null || !roles.Contains("Admin"))
+        {
+            return Unauthorized("Access Denied: Admin role required.");
+        }
         var setting = await _service.GetByKeyAsync(key);
         if (setting == null) return NotFound();
         return View(setting);
@@ -30,6 +44,13 @@ public class SystemSettingController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(SystemSettingModel model)
     {
+        var rolesString = HttpContext.Session.GetString("UserRoles");
+        var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+        if (roles == null || !roles.Contains("Admin"))
+        {
+            return Unauthorized("Access Denied: Admin role required.");
+        }
         if (!ModelState.IsValid)
             return View(model);
 
@@ -39,12 +60,26 @@ public class SystemSettingController : Controller
 
     public IActionResult Create()
     {
+        var rolesString = HttpContext.Session.GetString("UserRoles");
+        var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+        if (roles == null || !roles.Contains("Admin"))
+        {
+            return Unauthorized("Access Denied: Admin role required.");
+        }
         return View();
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(SystemSettingModel model)
     {
+        var rolesString = HttpContext.Session.GetString("UserRoles");
+        var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+        if (roles == null || !roles.Contains("Admin"))
+        {
+            return Unauthorized("Access Denied: Admin role required.");
+        }
         if (!ModelState.IsValid)
             return View(model);
 

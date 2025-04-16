@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalSystem.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CarController : Controller
     {
         private readonly ICarService _carService;
@@ -23,10 +23,20 @@ namespace CarRentalSystem.Controllers
             return View(availableCars);
         }
 
+
+        [HttpGet]
         // ADMIN VIEW: List all cars
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminIndex()
         {
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
+
+            // Proceed with action logic
             var cars = await _carService.GetAllAsync();
             return View(cars);
         }
@@ -43,29 +53,48 @@ namespace CarRentalSystem.Controllers
         }
 
         // GET: Car/Create
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
             return View();
         }
 
         // POST: Car/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create(CarModel model)
+        public async Task<IActionResult> Create(CarModel car)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
 
-            await _carService.AddAsync(model);
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
+
+            if (!ModelState.IsValid)
+                return View(car);
+
+            await _carService.AddAsync(car);
             return RedirectToAction(nameof(AdminIndex));
         }
 
         // GET: Car/Edit/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
             var car = await _carService.GetByIdAsync(id);
             if (car == null)
                 return NotFound();
@@ -76,23 +105,37 @@ namespace CarRentalSystem.Controllers
         // POST: Car/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, CarModel model)
+        public async Task<IActionResult> Edit(int id, CarModel car)
         {
-            if (id != model.Id)
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
+
+            if (id != car.Id)
                 return BadRequest();
 
             if (!ModelState.IsValid)
-                return View(model);
+                return View(car);
 
-            await _carService.UpdateAsync(model);
+            await _carService.UpdateAsync(car);
             return RedirectToAction(nameof(AdminIndex));
         }
 
         // GET: Car/Delete/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
+
             var car = await _carService.GetByIdAsync(id);
             if (car == null)
                 return NotFound();
@@ -103,18 +146,32 @@ namespace CarRentalSystem.Controllers
         // POST: Car/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
+
             await _carService.DeleteAsync(id);
             return RedirectToAction(nameof(AdminIndex));
         }
 
         // ADMIN: Mark car as rented
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> MarkAsRented(int id)
         {
+            var rolesString = HttpContext.Session.GetString("UserRoles");
+            var roles = rolesString?.Split(','); // Convert back to a list of roles
+
+            if (roles == null || !roles.Contains("Admin"))
+            {
+                return Unauthorized("Access Denied: Admin role required.");
+            }
+
             await _carService.MarkAsRentedAsync(id);
             return RedirectToAction(nameof(AdminIndex));
         }
