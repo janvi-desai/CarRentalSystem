@@ -42,11 +42,12 @@ namespace CarRentalSystem.Controllers
             {
                 return Unauthorized("Access Denied: User role required.");
             }
-            //var user = _authService.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail") ?? "");
-            //if (userId == null)
-            //{
+            var user = await _authService.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail") ?? "");
+            if (userId == null)
+            {
+                userId = $"{user?.Id}";
+            }
 
-            //}
             var rentals = await _rentalService.GetAllRentalsAsync();
             return View("MyRentals", rentals.Where(r => r.UserId == userId));
         }

@@ -107,7 +107,14 @@ namespace CarRentalSystem.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+
+            // Clear session values
+            HttpContext.Session.Remove("UserEmail");
+            HttpContext.Session.Remove("UserRoles");
+            // Alternatively: HttpContext.Session.Clear();
+
             return RedirectToAction("Login", "Auth");
         }
+
     }
 }
