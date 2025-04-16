@@ -6,7 +6,7 @@ namespace CarRentalSystem.Data
 {
     public static class SeedData
     {
-        public static async Task Initialize(IServiceProvider serviceProvider, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task Initialize(IServiceProvider serviceProvider, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             string[] roleNames = { "Admin", "User" };
 
@@ -23,7 +23,7 @@ namespace CarRentalSystem.Data
             var user = await userManager.FindByEmailAsync("admin@example.com");
             if (user == null)
             {
-                user = new ApplicationUser
+                user = new IdentityUser
                 {
                     UserName = "admin@example.com",
                     Email = "admin@example.com"
