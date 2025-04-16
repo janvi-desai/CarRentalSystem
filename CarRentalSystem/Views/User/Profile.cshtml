@@ -1,0 +1,53 @@
+﻿@model UserProfileModel
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h2>My Profile</h2>
+<p><strong>Email:</strong> @Model.Email</p>
+<p><strong>Name:</strong> @Model.Name</p>
+
+<form asp-action="UpdateProfile" method="post">
+    <div class="form-group">
+        <label for="newName">Edit Name</label>
+        <input name="newName" class="form-control" />
+        <button class="btn btn-primary mt-2" type="submit">Save</button>
+    </div>
+</form>
+
+<h3>My Rentals</h3>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Car</th><th>Pickup</th><th>Drop</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var rental in Model.Rentals)
+        {
+            <tr>
+                <td>@rental.CarId</td>
+                <td>@rental.PickupLocation</td>
+                <td>@rental.DropLocation</td>
+                <td>@rental.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>My Payments</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr><th>Amount</th><th>Method</th><th>Status</th><th>Date</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model.Payments)
+        {
+            <tr>
+                <td>@payment.Amount</td>
+                <td>@payment.PaymentMethod</td>
+                <td>@payment.Status</td>
+                <td>@payment.PaymentDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

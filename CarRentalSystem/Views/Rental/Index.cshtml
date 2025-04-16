@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CarRentalSystem.Models.RentalModel>
+@{
+    ViewData["Title"] = "All Rentals";
+}
+<h2>All Rentals</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Car ID</th>
+            <th>User ID</th>
+            <th>Pickup</th>
+            <th>Drop</th>
+            <th>Rent</th>
+            <th>Return</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>@rental.CarId</td>
+                <td>@rental.UserId</td>
+                <td>@rental.PickupLocation</td>
+                <td>@rental.DropLocation</td>
+                <td>@rental.RentDate.ToShortDateString()</td>
+                <td>@rental.ReturnDate.ToShortDateString()</td>
+                <td>@rental.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

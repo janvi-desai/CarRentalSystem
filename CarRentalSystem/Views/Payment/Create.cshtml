@@ -1,0 +1,29 @@
+﻿@model CarRentalSystem.Models.PaymentModel
+@{
+    ViewData["Title"] = "Make Payment";
+}
+
+<h2>Make a Payment</h2>
+
+<form asp-action="Create" method="post" class="needs-validation" novalidate>
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.RentalId)
+        @Html.TextBoxFor(m => m.RentalId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.Amount)
+        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", type = "number", step = "0.01", min = "1" })
+        @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.PaymentMethod)
+        @Html.DropDownListFor(m => m.PaymentMethod,
+                 new SelectList(new[] { "UPI", "Card", "Cash" }), "Select Method", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.PaymentMethod, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Payment</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>

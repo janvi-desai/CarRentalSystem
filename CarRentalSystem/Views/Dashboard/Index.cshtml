@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container">
+    <h2 class="mb-4">Welcome to CarRental System!</h2>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Cars</h5>
+                        <p class="card-text">Add, edit, or delete car listings.</p>
+                        <a asp-controller="Car" asp-action="Index" class="btn btn-light">Manage</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Rentals</h5>
+                        <p class="card-text">View all user bookings.</p>
+                        <a asp-controller="Rental" asp-action="Index" class="btn btn-light">View Rentals</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (User.IsInRole("User"))
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Browse Cars</h5>
+                        <p class="card-text">Choose cars to rent.</p>
+                        <a asp-controller="Car" asp-action="AvailableCars" class="btn btn-light">Browse</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">My Rentals</h5>
+                        <p class="card-text">Track your active and past rentals.</p>
+                        <a asp-controller="Rental" asp-action="MyRentals" class="btn btn-light">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

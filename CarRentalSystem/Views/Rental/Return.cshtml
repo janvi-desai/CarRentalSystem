@@ -1,0 +1,19 @@
+﻿@model CarRentalSystem.Models.RentalModel
+@{
+    ViewData["Title"] = "Return Car";
+}
+<h2>Return Car</h2>
+
+<form asp-action="Return" method="post">
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CarId)
+    @Html.HiddenFor(m => m.UserId)
+
+    <div class="form-group">
+        <label>Status</label>
+        <input class="form-control" value="Returned" readonly />
+    </div>
+
+    <button type="submit" class="btn btn-success">Confirm Return</button>
+    <a asp-action="MyRentals" asp-route-userId="@Model.UserId" class="btn btn-secondary">Cancel</a>
+</form>

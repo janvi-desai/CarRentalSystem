@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CarRentalSystem.Models.RentalModel>
+@{
+    ViewData["Title"] = "My Rentals";
+}
+<h2>My Rentals</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Car</th>
+            <th>Pickup</th>
+            <th>Drop</th>
+            <th>Rent Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>@rental.CarId</td>
+                <td>@rental.PickupLocation</td>
+                <td>@rental.DropLocation</td>
+                <td>@rental.RentDate.ToShortDateString()</td>
+                <td>@rental.ReturnDate.ToShortDateString()</td>
+                <td>@rental.Status</td>
+                <td>
+                    @if (rental.Status == "Pending")
+                    {
+                        <a asp-action="Return" asp-route-id="@rental.Id" class="btn btn-sm btn-success">Return</a>
+                        <a asp-action="Cancel" asp-route-id="@rental.Id" class="btn btn-sm btn-danger">Cancel</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

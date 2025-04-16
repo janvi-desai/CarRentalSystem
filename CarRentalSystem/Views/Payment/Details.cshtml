@@ -1,0 +1,16 @@
+﻿@model CarRentalSystem.Models.PaymentModel
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<h2>Payment Details</h2>
+
+<table class="table">
+    <tr><th>Rental ID</th><td>@Model.RentalId</td></tr>
+    <tr><th>Amount</th><td>@Model.Amount.ToString("C")</td></tr>
+    <tr><th>Method</th><td>@Model.PaymentMethod</td></tr>
+    <tr><th>Status</th><td>@Model.Status</td></tr>
+    <tr><th>Date</th><td>@Model.PaymentDate.ToShortDateString()</td></tr>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Back</a>

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<CarRentalSystem.Models.SystemSettingModel>
+@{
+    ViewData["Title"] = "System Settings";
+}
+<h2>System Settings</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Add New Setting</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Key</td>
+                <td>@item.Value</td>
+                <td>
+                    <a asp-action="Edit" asp-route-key="@item.Key" class="btn btn-primary btn-sm">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

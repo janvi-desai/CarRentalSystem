@@ -1,0 +1,29 @@
+﻿@model AdminDashboardModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">Total Users: @Model.TotalUsers</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">Total Cars: @Model.TotalCars</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">Active Rentals: @Model.ActiveRentals</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">Completed Payments: @Model.CompletedPayments</div>
+        </div>
+    </div>
+</div>
