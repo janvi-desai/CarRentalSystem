@@ -3,12 +3,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* prevent horizontal scroll */
+    }
+
+    #wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    #sidebar-wrapper {
+        width: 250px; /* fixed width for sidebar */
+        flex-shrink: 0; /* don’t shrink */
+        height: 100vh;
+        position: fixed; /* make sidebar static/fixed */
+        top: 0;
+        left: 0;
+        overflow-y: auto; /* scroll if content overflows */
+    }
+
+    #page-content-wrapper {
+        margin-left: 250px; /* push content to the right of the sidebar */
+        flex-grow: 1;
+        padding: 1rem;
+        width: calc(100% - 250px); /* fill remaining width */
+        min-height: 100vh;
+        background-color: white; /* or your preferred background */
+    }
+</style>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - Car Rental Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+<body class="demo">
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div class="bg-dark border-end text-white" id="sidebar-wrapper">
